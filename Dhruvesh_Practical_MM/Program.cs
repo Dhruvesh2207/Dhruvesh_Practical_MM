@@ -1,8 +1,18 @@
+using Dhruvesh_Practical_MM.Repositories;
+using Microsoft.Data.SqlClient;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddSingleton<SqlConnection>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var connectionString = configuration.GetConnectionString("Employee_MM");
+    return new SqlConnection(connectionString);
+});
+builder.Services.AddSingleton<IStateCityRepo, StateCityRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
