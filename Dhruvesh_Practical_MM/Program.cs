@@ -13,6 +13,7 @@ builder.Services.AddSingleton<SqlConnection>(sp =>
     return new SqlConnection(connectionString);
 });
 builder.Services.AddSingleton<IStateCityRepo, StateCityRepo>();
+builder.Services.AddSingleton<IEmployeeRepo , EmployeeRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,6 +33,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Employee}/{action=GetAllEmployee}/{id?}");
 
 app.Run();

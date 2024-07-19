@@ -5,5 +5,7 @@ namespace Dhruvesh_Practical_MM.Repositories
     public interface IStateCityRepo
     {
         IEnumerable<StateModel> GetAllState();
+
+        IEnumerable<CityModel> GetCityByState(int stateid);
     }
 }

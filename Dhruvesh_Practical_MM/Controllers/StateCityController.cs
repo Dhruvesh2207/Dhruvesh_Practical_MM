@@ -23,5 +23,11 @@ namespace Dhruvesh_Practical_MM.Controllers
             return Json(getstate);
         }
 
+        public IActionResult GetCityByState(int id)
+        {
+            var getcity = _stateCityRepo.GetCityByState(id);
+            return Json(getcity);
+        }
+
     }
 }

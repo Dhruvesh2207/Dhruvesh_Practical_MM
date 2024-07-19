@@ -1,0 +1,95 @@
+﻿@model Dhruvesh_Practical_MM.Models.EmployeeModel
+
+@{
+    ViewData["Title"] = "Update Employee";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div class="container">
+    <form asp-action="UpdateEmployee" asp-controller="Employee" method="post">
+
+        <input type="hidden" asp-for="c_empid" />
+        <div class="form-group">
+            <label asp-for="c_empname" class="control-label">Name</label>
+            <input asp-for="c_empname" class="form-control" />
+            <span asp-validation-for="c_empname" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empemail" class="control-label">Email</label>
+            <input asp-for="c_empemail" class="form-control" />
+            <span asp-validation-for="c_empemail" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empphone" class="control-label">Mobile</label>
+            <input asp-for="c_empphone" class="form-control" />
+            <span asp-validation-for="c_empphone" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empaddress" class="control-label">Address</label>
+            <input asp-for="c_empaddress" class="form-control" />
+            <span asp-validation-for="c_empaddress" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empstate" class="control-label">State</label>
+            <select asp-for="c_empstate" class="form-control" id="stateDropdown" data-url="@Url.Action("GetCityByState", "StateCity")">
+                <option value="">SELECT A STATE</option>
+                @foreach (var state in ViewBag.State)
+                {
+                    <option value="@state.Value">@state.Text</option>
+                }
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empcity" class="control-label">City</label>
+            <select asp-for="c_empcity" class="form-control" id="cityDropdown">
+                <option value="">SELECT A CITY</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input id="agreeCheckbox" class="form-check-input" type="checkbox" />
+                <label for="agreeCheckbox" class="form-check-label">Agree</label>
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" id="submitButton" disabled />
+            <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $(document).ready(function () {
+            $('#stateDropdown').change(function () {
+                var stateId = $(this).val();
+                var url = $(this).data('url');
+                if (stateId) {
+                    $.getJSON(url, { id: stateId }, function (data) {
+                        var cityDropdown = $('#cityDropdown');
+                        cityDropdown.empty();
+                        cityDropdown.append('<option value="">SELECT A CITY</option>');
+                        $.each(data, function (index, item) {
+                            cityDropdown.append('<option value="' + item.c_cityid + '">' + item.c_cityname + '</option>');
+                        });
+                    });
+                } else {
+                    $('#cityDropdown').empty().append('<option value="">SELECT A CITY</option>');
+                }
+            });
+
+            $('#agreeCheckbox').change(function () {
+                $('#submitButton').prop('disabled', !$(this).is(':checked'));
+            });
+
+            $('#closeButton').click(function () {
+                
+                window.location.href = '@Url.Action("GetAllEmployee", "Employee")'; 
+            });
+        });
+    </script>
+}
