@@ -1,79 +1,93 @@
 ﻿@model Dhruvesh_Practical_MM.Models.EmployeeModel
 
 @{
-    ViewData["Title"] = "Add or Update Employee";
+    ViewData["Title"] = "Add Employee";
 }
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
 
 <h2>@ViewData["Title"]</h2>
 <div class="container">
-<form asp-action="AddEmployee" asp-controller="Employee" method="post">
-    
-    <div class="form-group">
-        <label asp-for="c_empname" class="control-label">Name</label>
-        <input asp-for="c_empname" class="form-control" />
-        <span asp-validation-for="c_empname" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="c_empemail" class="control-label">Email</label>
-        <input asp-for="c_empemail" class="form-control" />
-        <span asp-validation-for="c_empemail" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="c_empphone" class="control-label">Mobile</label>
-        <input asp-for="c_empphone" class="form-control" />
-        <span asp-validation-for="c_empphone" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="c_empaddress" class="control-label">Address</label>
-        <input asp-for="c_empaddress" class="form-control" />
-        <span asp-validation-for="c_empaddress" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="c_empstate" class="control-label">State</label>
-        <select asp-for="c_empstate" class="form-control" id="stateDropdown" data-url="@Url.Action("GetCityByState", "StateCity")">
-            <option value="">SELECT A STATE</option>
-            @foreach (var state in ViewBag.State)
-            {
-                <option value="@state.Value">@state.Text</option>
-            }
-        </select>
-    </div>
-    <div class="form-group">
-        <label asp-for="c_empcity" class="control-label">City</label>
-        <select asp-for="c_empcity" class="form-control" id="cityDropdown">
-            <option value="">SELECT A CITY</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <div class="form-check">
-            <input id="agreeCheckbox" class="form-check-input" type="checkbox" />
-            <label for="agreeCheckbox" class="form-check-label">Agree</label>
-            <span  class="text-danger"></span>
+    <form asp-action="AddEmployee" asp-controller="Employee" method="post" id="registrationForm" onsubmit="return validate()">
+        <div class="form-group">
+            <label asp-for="c_empname" class="control-label">Name</label>
+            <input asp-for="c_empname" class="form-control" id="txtName" />
+            <span id="nameerror" class="text-danger"></span>
         </div>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" id="submitButton" disabled />
-        <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
-    </div>
-</form>
+        <div class="form-group">
+            <label asp-for="c_empemail" class="control-label">Email</label>
+            <input asp-for="c_empemail" class="form-control" id="txtEmail" />
+            <span id="emailerror" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empphone" class="control-label">Mobile</label>
+            <input asp-for="c_empphone" class="form-control" id="txtPhone" maxlength="10"/>
+            <span id="phoneerror" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empaddress" class="control-label">Address</label>
+            <input asp-for="c_empaddress" class="form-control" id="txtAddress" />
+            <span id="addresserror" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empstate" class="control-label">State</label>
+            <select asp-for="c_empstate" class="form-control" id="stateDropdown" data-url="@Url.Action("GetCityByState", "StateCity")">
+                <option value="">SELECT A STATE</option>
+                @foreach (var state in ViewBag.State)
+                {
+                    <option value="@state.Value">@state.Text</option>
+                }
+            </select>
+            <span asp-validation-for="c_empstate" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="c_empcity" class="control-label">City</label>
+            <select asp-for="c_empcity" class="form-control" id="cityDropdown">
+                <option value="">SELECT A CITY</option>
+            </select>
+            <span asp-validation-for="c_empcity" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <div class="form-check">
+                <input id="agreeCheckbox" class="form-check-input" type="checkbox" />
+                <label for="agreeCheckbox" class="form-check-label">Agree</label>
+                <span class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" id="submitButton" disabled />
+            <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
+        </div>
+    </form>
 </div>
 
 @section Scripts {
+   
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    
+    <script src="~/js/EmployeeValidation.js" asp-append-version="true"></script>
+
+
+     
+    
     <script>
         $(document).ready(function () {
             $('#stateDropdown').change(function () {
-                var stateId = $(this).val();
+                var stateid = $(this).val();
                 var url = $(this).data('url');
-                if (stateId) {
-                    $.getJSON(url, { id: stateId }, function (data) {
+                if (stateid) {
+                    $.getJSON(url, { id: stateid }, function (data) {
                         var cityDropdown = $('#cityDropdown');
                         cityDropdown.empty();
                         cityDropdown.append('<option value="">SELECT A CITY</option>');
-                        $.each(data, function (index, item) {
-                            cityDropdown.append('<option value="' + item.c_cityid + '">' + item.c_cityname + '</option>');
+                        $.each(data, function (index, city) {
+                            cityDropdown.append('<option value="' + city.c_cityname + '">' + city.c_cityname + '</option>');
                         });
                     });
                 } else {
@@ -86,8 +100,8 @@
             });
 
             $('#closeButton').click(function () {
-              
-                window.location.href = '@Url.Action("GetAllEmployee", "Employee")'; 
+
+                window.location.href = '@Url.Action("GetAllEmployee", "Employee")';
             });
         });
     </script>

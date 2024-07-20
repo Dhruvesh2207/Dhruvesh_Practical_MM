@@ -9,8 +9,9 @@ namespace Dhruvesh_Practical_MM.Repositories
 
         public EmployeeModel GetEmployeeById(int id);
 
+        void UpdateEmployee(EmployeeModel employeeModel);
         void DeleteEmployee(int id);
 
-        void UpdateEmployee(EmployeeModel employeeModel);
+        
     }
 }

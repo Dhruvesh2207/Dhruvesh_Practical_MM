@@ -39,6 +39,7 @@ namespace Dhruvesh_Practical_MM.Controllers
 
         public IActionResult GetAllEmployee()
         {
+
             var getemployee = _employeeRepo.GetAllEmployee();
             return View(getemployee);
         }
@@ -47,12 +48,6 @@ namespace Dhruvesh_Practical_MM.Controllers
         {
             var get = _employeeRepo.GetEmployeeById(id);
             return Json(get);
-        }
-
-        public IActionResult DeleteEmployee(int id)
-        {
-            _employeeRepo.DeleteEmployee(id);
-            return RedirectToAction("GetAllEmployee" , "Employee");
         }
 
         [HttpGet]
@@ -71,5 +66,12 @@ namespace Dhruvesh_Practical_MM.Controllers
             return RedirectToAction("GetAllEmployee", "Employee");
 
         }
+        public IActionResult DeleteEmployee(int id)
+        {
+            _employeeRepo.DeleteEmployee(id);
+            return RedirectToAction("GetAllEmployee" , "Employee");
+        }
+
+        
     }
 }
