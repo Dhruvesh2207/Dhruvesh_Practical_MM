@@ -41,7 +41,6 @@ namespace Dhruvesh_Practical_MM.Controllers
 
         public IActionResult GetAllEmployee()
         {
-
             var getemployee = _employeeRepo.GetAllEmployee();
             return Json(getemployee);
         }
