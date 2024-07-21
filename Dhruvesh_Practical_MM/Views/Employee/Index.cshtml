@@ -1,25 +1,244 @@
-﻿<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-    Launch demo modal
-</button>
+﻿@model Dhruvesh_Practical_MM.Models.EmployeeModel
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+@{
+    ViewData["Title"] = "Employee List";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+        crossorigin="anonymous"></script>
+<script src="~/js/EmployeeValidation.js" asp-append-version="true"></script>
+
+<div>
+    <h2>Employee List</h2>
+    <table id="emptable" class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Mobile</th>
+                <th scope="col">Address</th>
+                <th scope="col">State</th>
+                <th scope="col">City</th>
+                <th scope="col">Created Date</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+          
+        </tbody>
+    </table>
+</div>
+
+<button id="openAddEmployeeFormBtn" class="btn btn-primary">Add Employee</button>
+
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title" id="addEmployeeModalLabel">Add Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                ...
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
+            <form asp-action="AddEmployee" asp-controller="Employee" method="post" id="registrationForm" onsubmit="return validate()">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for="c_empname" class="control-label">Name</label>
+                        <input asp-for="c_empname" class="form-control" id="txtName" />
+                        <span id="nameerror" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="c_empemail" class="control-label">Email</label>
+                        <input asp-for="c_empemail" class="form-control" id="txtEmail" />
+                        <span id="emailerror" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="c_empphone" class="control-label">Mobile</label>
+                        <input asp-for="c_empphone" class="form-control" id="txtPhone" maxlength="10" />
+                        <span id="phoneerror" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="c_empaddress" class="control-label">Address</label>
+                        <input asp-for="c_empaddress" class="form-control" id="txtAddress" />
+                        <span id="addresserror" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="c_empstate" class="control-label">State</label>
+                        <select asp-for="c_empstate" class="form-control" id="stateDropdown"
+                                data-url="@Url.Action("GetCityByState", "StateCity")">
+                            <option value="">SELECT A STATE</option>
+                            @foreach (var state in ViewBag.State)
+                            {
+                                <option value="@state.Value">@state.Text</option>
+                            }
+                        </select>
+                        <span asp-validation-for="c_empstate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="c_empcity" class="control-label">City</label>
+                        <select asp-for="c_empcity" class="form-control" id="cityDropdown">
+                            <option value="">SELECT A CITY</option>
+                        </select>
+                        <span asp-validation-for="c_empcity" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input id="agreeCheckbox" class="form-check-input" type="checkbox" />
+                            <label for="agreeCheckbox" class="form-check-label">Agree</label>
+                            <span class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" id="submitButton" disabled />
+                    <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
+
+@section scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script src="~/js/EmployeeValidation.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $('#openAddEmployeeFormBtn').click(function () {
+                $('#addEmployeeModal').modal('show');
+            });
+
+            $('#closeButton').click(function () {
+                $('#addEmployeeModal').modal('hide');
+            });
+
+            $('#stateDropdown').change(function () {
+                var stateid = $(this).val();
+                var url = $(this).data('url');
+                if (stateid) {
+                    $.getJSON(url, { id: stateid }, function (data) {
+                        var cityDropdown = $('#cityDropdown');
+                        cityDropdown.empty();
+                        cityDropdown.append('<option value="">SELECT A CITY</option>');
+                        $.each(data, function (index, city) {
+                            cityDropdown.append('<option value="' + city.c_cityname + '">' + city.c_cityname + '</option>');
+                        });
+                    });
+                } else {
+                    $('#cityDropdown').empty().append('<option value="">SELECT A CITY</option>');
+                }
+            });
+
+            $('#agreeCheckbox').change(function () {
+                $('#submitButton').prop('disabled', !$(this).is(':checked'));
+            });
+
+            $('#addEmployeeForm').submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        console.log('Employee added successfully.');
+                        $('#addEmployeeModal').modal('hide');
+                        loadEmployees(); 
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error adding employee:', error);
+                        alert('Error adding employee. Please try again.');
+                    }
+                });
+            });
+
+            
+            $('#emptable').on('click', '.edit', function () {
+                var editUrl = $(this).data('action');
+                window.location.href = editUrl; 
+            });
+
+        
+            $('#emptable').on('click', '.delete', function () {
+                var deleteUrl = $(this).data('action');
+                if (confirm('Are you sure you want to delete this employee?')) {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'POST',
+                        success: function (data) {
+                            console.log('Employee deleted successfully.');
+                            loadEmployees(); 
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error deleting employee:', error);
+                            alert('Error deleting employee. Please try again.');
+                        }
+                    });
+                }
+            });
+
+            function loadEmployees() {
+                $.ajax({
+                    url: '@Url.Action("GetAllEmployee", "Employee")',
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (employees) {
+                        var tbody = $('#emptable tbody');
+                        tbody.empty();
+
+                        if (employees && employees.length > 0) {
+                            employees.forEach(function (employee) {
+                                var editUrl = '@Url.Action("UpdateEmployee", "Employee", new { id = "employeeId" })'
+                                    .replace("employeeId", employee.c_empid);
+                                var deleteUrl = '@Url.Action("DeleteEmployee", "Employee", new { id = "employeeId" })'
+                                    .replace("employeeId", employee.c_empid);
+
+                                var row = `<tr>
+                                            <td>${employee.c_empid}</td>
+                                            <td>${employee.c_empname}</td>
+                                            <td>${employee.c_empemail}</td>
+                                            <td>${employee.c_empphone}</td>
+                                            <td>${employee.c_empaddress}</td>
+                                            <td>${employee.c_empstate}</td>
+                                            <td>${employee.c_empcity}</td>
+                                            <td>${employee.c_createddate}</td>
+                                            <td>
+                                                <button class="btn btn-primary edit"
+                                                        data-id="${employee.c_empid}"
+                                                        data-action="${editUrl}">Edit</button>
+                                                <button class="btn btn-danger delete"
+                                                        data-id="${employee.c_empid}"
+                                                        data-action="${deleteUrl}">Delete</button>
+                                            </td>
+                                        </tr>`;
+                                tbody.append(row);
+                            });
+                        } else {
+                            tbody.append('<tr><td colspan="9">No data available</td></tr>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error loading employees:', error);
+                        var tbody = $('#emptable tbody');
+                        tbody.empty();
+                        tbody.append('<tr><td colspan="9">Error loading employees</td></tr>');
+                    }
+                });
+            }
+
+           
+            loadEmployees();
+        });
+
+    </script>
+}

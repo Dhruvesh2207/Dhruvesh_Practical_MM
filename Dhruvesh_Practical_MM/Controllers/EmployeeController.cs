@@ -19,6 +19,8 @@ namespace Dhruvesh_Practical_MM.Controllers
 
         public IActionResult Index()
         {
+            var getstate = _stateCityRepo.GetAllState();
+            ViewBag.State = new SelectList(getstate, "c_stateid", "c_statename");
             return View();
         }
 
@@ -33,7 +35,7 @@ namespace Dhruvesh_Practical_MM.Controllers
         public IActionResult AddEmployee(EmployeeModel employeeModel)
         {
             _employeeRepo.AddEmployee(employeeModel);
-            return RedirectToAction("GetAllEmployee", "Employee");
+            return RedirectToAction("Index", "Employee");
 
         }
 
@@ -41,7 +43,7 @@ namespace Dhruvesh_Practical_MM.Controllers
         {
 
             var getemployee = _employeeRepo.GetAllEmployee();
-            return View(getemployee);
+            return Json(getemployee);
         }
 
         public IActionResult GetEmployeeById(int id)
@@ -63,13 +65,13 @@ namespace Dhruvesh_Practical_MM.Controllers
         public IActionResult UpdateEmployee(EmployeeModel employeeModel)
         {
             _employeeRepo.UpdateEmployee(employeeModel);
-            return RedirectToAction("GetAllEmployee", "Employee");
+            return RedirectToAction("Index", "Employee");
 
         }
         public IActionResult DeleteEmployee(int id)
         {
             _employeeRepo.DeleteEmployee(id);
-            return RedirectToAction("GetAllEmployee" , "Employee");
+            return RedirectToAction("Index", "Employee");
         }
 
         

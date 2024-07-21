@@ -8,7 +8,6 @@ namespace Dhruvesh_Practical_MM.Repositories
         IEnumerable<EmployeeModel> GetAllEmployee();
 
         public EmployeeModel GetEmployeeById(int id);
-
         void UpdateEmployee(EmployeeModel employeeModel);
         void DeleteEmployee(int id);
 
