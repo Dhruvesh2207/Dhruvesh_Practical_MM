@@ -13,6 +13,8 @@ namespace Dhruvesh_Practical_MM.Repositories
             conn = sqlConnection;
         }
 
+        
+
         public IEnumerable<StateModel> GetAllState()
         {
             try

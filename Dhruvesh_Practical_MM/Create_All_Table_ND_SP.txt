@@ -134,7 +134,7 @@ END;
 
 	*** GET CITY BY STATE STORE PROCEDURE ***
 
-cerate procedure [dbo].[SP_GetCityByState]
+create procedure [dbo].[SP_GetCityByState]
 	@id int
 AS
 BEGIN
