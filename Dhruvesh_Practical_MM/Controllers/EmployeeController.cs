@@ -56,16 +56,24 @@ namespace Dhruvesh_Practical_MM.Controllers
         {
             var getstate = _stateCityRepo.GetAllState();
             ViewBag.State = new SelectList(getstate, "c_stateid", "c_statename");
-            var GetById = _employeeRepo.GetEmployeeById(id);
-            return View(GetById);
+
+            var employee = _employeeRepo.GetEmployeeById(id);
+            return View(employee);
         }
 
         [HttpPost]
         public IActionResult UpdateEmployee(EmployeeModel employeeModel)
         {
-            _employeeRepo.UpdateEmployee(employeeModel);
-            return RedirectToAction("Index", "Employee");
+            if (ModelState.IsValid)
+            {
+                _employeeRepo.UpdateEmployee(employeeModel);
+                return RedirectToAction("Index", "Employee");
+            }
 
+            var getstate = _stateCityRepo.GetAllState();
+            ViewBag.State = new SelectList(getstate, "c_stateid", "c_statename");
+
+            return View(employeeModel);
         }
         public IActionResult DeleteEmployee(int id)
         {
