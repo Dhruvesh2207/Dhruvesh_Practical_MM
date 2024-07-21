@@ -34,13 +34,17 @@ namespace Dhruvesh_Practical_MM.Controllers
         [HttpPost]
         public IActionResult AddEmployee(EmployeeModel employeeModel)
         {
-            _employeeRepo.AddEmployee(employeeModel);
+            if (ModelState.IsValid)
+            {
+                _employeeRepo.AddEmployee(employeeModel);
+            }
             return RedirectToAction("Index", "Employee");
 
         }
 
         public IActionResult GetAllEmployee()
         {
+
             var getemployee = _employeeRepo.GetAllEmployee();
             return Json(getemployee);
         }
@@ -67,17 +71,16 @@ namespace Dhruvesh_Practical_MM.Controllers
             if (ModelState.IsValid)
             {
                 _employeeRepo.UpdateEmployee(employeeModel);
-                return RedirectToAction("Index", "Employee");
             }
+            return RedirectToAction("Index", "Employee");
 
-            var getstate = _stateCityRepo.GetAllState();
-            ViewBag.State = new SelectList(getstate, "c_stateid", "c_statename");
-
-            return View(employeeModel);
         }
         public IActionResult DeleteEmployee(int id)
         {
-            _employeeRepo.DeleteEmployee(id);
+            if (ModelState.IsValid)
+            {
+                _employeeRepo.DeleteEmployee(id);
+            }
             return RedirectToAction("Index", "Employee");
         }
 
